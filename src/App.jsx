@@ -1,37 +1,76 @@
 import { useState } from "react";
-export default function Form() {
-  const [firstName, setFirstName] = useState(0);
-  const [lastName, setLastName] = useState(0);
 
-  function handleFirstNameChange(e) {
-    setFirstName(e.target.value);
+const initialProducts = [
+  {
+    id: 0,
+    name: "Baklava",
+    count: 1,
+  },
+  {
+    id: 1,
+    name: "Cheese",
+    count: 5,
+  },
+  {
+    id: 2,
+    name: "Spaghetti",
+    count: 2,
+  },
+];
+
+export default function ShoppingCart() {
+  const [products, setProducts] = useState(initialProducts);
+
+  function handleIncreaseClick(productId) {
+    setProducts(
+      products.map((product) => {
+        if (product.id === productId) {
+          return {
+            ...product,
+            count: product.count + 1,
+          };
+        } else {
+          return product;
+        }
+      })
+    );
   }
-
-  function handleLastNameChange(e) {
-    setLastName(e.target.value);
-  }
-
-  function handleReset() {
-    setFirstName("");
-    setLastName("");
+  function handleDesincreasessClick(productId) {
+    let nextProduct = products.map((product) => {
+      if (product.id === productId) {
+        return {
+          ...product,
+          count: product.count - 1,
+        };
+      } else {
+        return product;
+      }
+    });
+    nextProduct = nextProduct.filter((p) => p.count > 0);
+    setProducts(nextProduct);
   }
 
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
-      <input
-        placeholder="First name"
-        value={firstName}
-        onChange={handleFirstNameChange}
-      />
-      <input
-        placeholder="Last name"
-        value={lastName}
-        onChange={handleLastNameChange}
-      />
-      <h1>
-        Hi, {firstName} {lastName}
-      </h1>
-      <button onClick={handleReset}>Reset</button>
-    </form>
+    <ul>
+      {products.map((product) => (
+        <li key={product.id}>
+          {product.name} (<b>{product.count}</b>)
+          <button
+            onClick={() => {
+              handleIncreaseClick(product.id);
+            }}
+          >
+            +
+          </button>
+          <button
+            onClick={() => {
+              handleDesincreasessClick(product.id);
+            }}
+          >
+            –
+          </button>
+        </li>
+      ))}
+    </ul>
   );
 }
