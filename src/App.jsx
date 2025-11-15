@@ -1,76 +1,34 @@
-import { useState } from "react";
 
-const initialProducts = [
-  {
-    id: 0,
-    name: "Baklava",
-    count: 1,
-  },
-  {
-    id: 1,
-    name: "Cheese",
-    count: 5,
-  },
-  {
-    id: 2,
-    name: "Spaghetti",
-    count: 2,
-  },
-];
-
-export default function ShoppingCart() {
-  const [products, setProducts] = useState(initialProducts);
-
-  function handleIncreaseClick(productId) {
-    setProducts(
-      products.map((product) => {
-        if (product.id === productId) {
-          return {
-            ...product,
-            count: product.count + 1,
-          };
-        } else {
-          return product;
-        }
-      })
-    );
+export default function Form({
+  // Try 'submitting', 'error', 'success':
+  status = 'Typing'
+}) {
+  if (status === 'success') {
+    return <h1>That's right!</h1>
   }
-  function handleDesincreasessClick(productId) {
-    let nextProduct = products.map((product) => {
-      if (product.id === productId) {
-        return {
-          ...product,
-          count: product.count - 1,
-        };
-      } else {
-        return product;
-      }
-    });
-    nextProduct = nextProduct.filter((p) => p.count > 0);
-    setProducts(nextProduct);
-  }
-
   return (
-    <ul>
-      {products.map((product) => (
-        <li key={product.id}>
-          {product.name} (<b>{product.count}</b>)
-          <button
-            onClick={() => {
-              handleIncreaseClick(product.id);
-            }}
-          >
-            +
-          </button>
-          <button
-            onClick={() => {
-              handleDesincreasessClick(product.id);
-            }}
-          >
-            –
-          </button>
-        </li>
-      ))}
-    </ul>
+    <>
+      <h2>City quiz</h2>
+      <p>
+        In which city is there a billboard that turns air into drinkable water?
+      </p>
+      <form>
+        <textarea disabled={
+          status === 'submitting'
+        } />
+        <br />
+        <button disabled={
+          status === 'empty' ||
+          status === 'submitting'
+        }>
+          Submit
+        </button>
+        {status === 'error' &&
+          <p className="Error">
+            Good guess but a wrong answer. Try again!
+          </p>
+        }
+      </form>
+      </>
   );
 }
